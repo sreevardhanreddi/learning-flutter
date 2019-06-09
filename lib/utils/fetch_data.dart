@@ -5,7 +5,7 @@ import './api_url.dart';
 
 Map<String, double> currencyListData = {};
 
-Future<Map> fetchRatesData() async {
+Future<Map<String, double>> fetchRatesData() async {
   var client = new http.Client();
   var jsonResponse = await client.get(url);
   var rates = json.decode(jsonResponse.body);
