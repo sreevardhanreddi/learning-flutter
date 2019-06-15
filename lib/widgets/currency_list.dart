@@ -15,10 +15,20 @@ class CurrencyList extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget _displayWidget = (ratesData.length > 0)
         ? FutureDataWidget(ratesData)
-        : Center(child: CircularProgressIndicator());
+        : Center(
+            child: SizedBox(
+              height: 150.0,
+              width: 150.00,
+              child: CircularProgressIndicator(
+                strokeWidth: 5.0,
+              ),
+            ),
+          );
 
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _displayWidget,
         ],
