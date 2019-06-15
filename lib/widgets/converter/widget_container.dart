@@ -60,6 +60,14 @@ class _ConverterWidgetState extends State<ConverterWidget> {
     });
   }
 
+  _onSwap() {
+    setState(() {
+      var temp = _toDropDownValue;
+      _toDropDownValue = _fromDropDownValue;
+      _fromDropDownValue = temp;
+    });
+  }
+
   _toOnChange(data) {
     setState(() {
       _toDropDownValue = data;
@@ -68,13 +76,17 @@ class _ConverterWidgetState extends State<ConverterWidget> {
     });
   }
 
-  _changeAmount(data) {
-    setState(() {
-      if (double.tryParse(data) != null) {
-        _amount = data;
-      }
-    });
-  }
+  // _changeAmount(data) {
+  //   _amount= data;
+  //   print(_amount);
+  //   print('input amount');
+  //   print(data);
+  //   setState(() {
+  //     print('in set state');
+  //     _amount = data;
+  //     print(_amount);
+  //   });
+  // }
 
   _convertAmount() {
     var urlData =
@@ -100,7 +112,7 @@ class _ConverterWidgetState extends State<ConverterWidget> {
         : Center(
             child: Container(
               child: Text(
-                'Converterd Amount : ${_convertedAmount}',
+                'Converterd Amount : ${_convertedAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
@@ -147,44 +159,54 @@ class _ConverterWidgetState extends State<ConverterWidget> {
               ],
             ),
             Container(
-              height: 30.0,
+              height: 50.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   // InputField(),
-                  Container(
-                    child: DropdownButton<String>(
-                      value: _fromDropDownValue,
-                      onChanged: _fromOnChange,
-                      items: CountryCodesList.map(
-                        (data) => DropdownMenuItem(
-                              value: data[1],
-                              child: Text(
-                                data[0],
-                                style: TextStyle(fontSize: 30.0),
+                  DropdownButtonHideUnderline(
+                    child: Container(
+                      child: DropdownButton<String>(
+                        value: _fromDropDownValue,
+                        onChanged: _fromOnChange,
+                        items: CountryCodesList.map(
+                          (data) => DropdownMenuItem(
+                                value: data[1],
+                                child: Text(
+                                  data[0],
+                                  style: TextStyle(fontSize: 30.0),
+                                ),
                               ),
-                            ),
-                      ).toList(),
+                        ).toList(),
+                      ),
                     ),
                   ),
-                  FlatButton(
-                    child: Text('Swap'),
-                    color: Colors.greenAccent,
-                    onPressed: () {},
+                  // FlatButton(
+                  //   child: Text('Swap'),
+                  //   color: Colors.greenAccent,
+                  //   onPressed: () {},
+                  // ),
+                  IconButton(
+                    icon: Icon(Icons.compare_arrows),
+                    color: Colors.orange,
+                    onPressed: _onSwap,
+                    iconSize: 40.0,
                   ),
-                  Container(
-                    child: DropdownButton<String>(
-                      value: _toDropDownValue,
-                      onChanged: _toOnChange,
-                      items: CountryCodesList.map(
-                        (data) => DropdownMenuItem(
-                              value: data[1],
-                              child: Text(
-                                data[0],
-                                style: TextStyle(fontSize: 30.0),
+                  DropdownButtonHideUnderline(
+                    child: Container(
+                      child: DropdownButton<String>(
+                        value: _toDropDownValue,
+                        onChanged: _toOnChange,
+                        items: CountryCodesList.map(
+                          (data) => DropdownMenuItem(
+                                value: data[1],
+                                child: Text(
+                                  data[0],
+                                  style: TextStyle(fontSize: 30.0),
+                                ),
                               ),
-                            ),
-                      ).toList(),
+                        ).toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -202,7 +224,14 @@ class _ConverterWidgetState extends State<ConverterWidget> {
                     BlacklistingTextInputFormatter(new RegExp('[\\-|,\\ ]'))
                   ],
                   decoration: InputDecoration(labelText: 'Amount'),
-                  onChanged: _changeAmount,
+                  onChanged: (data) {
+                    setState(() {
+                      if (double.tryParse(data) != null) {
+                        _amount = double.tryParse(data);
+                        print(_amount);
+                      }
+                    });
+                  },
                 ),
               ),
             ),
