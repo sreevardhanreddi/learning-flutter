@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'widgets/app.dart';
+import './screens/favourites_screen.dart';
+import 'widgets/side_drawer.dart';
+import './screens/movie_detail.dart';
 
 void main() => runApp(App());
 
@@ -20,7 +23,12 @@ class _AppState extends State<App> {
         body: Container(
           child: MovieApp(),
         ),
+        drawer: SideDrawer(),
       ),
+      routes: {
+        '/favourites': (ctx) => FavouritesList(),
+        '/details': (ctx) => MovieDetail(),
+      },
     );
   }
 }

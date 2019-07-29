@@ -1,10 +1,16 @@
 class Movie {
   String title, posterPath, id, overview, releaseDate, voteAverage;
-  bool isFavourite;
+  String isFavourite;
+  // bool isFavourite;
   // double voteAverage;
 
   Movie(
-      {this.title, this.posterPath, this.id, this.overview, this.isFavourite, this.voteAverage});
+      {this.title,
+      this.posterPath,
+      this.id,
+      this.overview,
+      this.isFavourite,
+      this.voteAverage});
 
   Movie.fromJson(Map jsonData)
       : title = jsonData['title'],
@@ -12,5 +18,19 @@ class Movie {
         id = jsonData['id'].toString(),
         overview = jsonData['overview'],
         voteAverage = jsonData['vote_average'].toString(),
-        isFavourite = false;
+        releaseDate = jsonData['release_date'],
+        isFavourite = 0.toString();
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      'title': title,
+      'posterPath': posterPath,
+      'id': id,
+      'overview': overview,
+      'voteAverage': voteAverage,
+      'isFavourite': isFavourite,
+      'releaseDate': releaseDate,
+    };
+    return map;
+  }
 }

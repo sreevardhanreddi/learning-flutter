@@ -13,59 +13,54 @@ class MovieApp extends StatefulWidget {
 
 class _MovieAppState extends State<MovieApp> {
   List<Movie> movies = [];
+  String _query = '';
   bool isLoading = false;
+  int totalPages = 0;
+  int currentPage = 1;
+  int totalResults = 0;
+  bool isFooterLoading = false;
+  bool noMoreResults = false;
 
   getMovieQuery(String query) {
     setState(() {
       isLoading = true;
+      _query = query;
     });
-    fetchMovies(query).then((data) => {
+    fetchMovies(_query).then((data) => {
           setState(() {
-            movies = data;
-            print(
-                'after set state >>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<');
-            print(movies);
+            movies = data[0];
+            totalPages = data[1];
             isLoading = false;
+            totalResults = data[2];
           })
         });
   }
-  //   Movie(
-  //     title: 'Fight Club',
-  //     posterPath: '/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg',
-  //     id: '550',
-  //     overview:
-  //         'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.',
-  //     voteAverage: 8.4,
-  //     isFavourite: false,
-  //   ),
-  //   Movie(
-  //     title: 'some really long movie name lets see',
-  //     posterPath: '/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg',
-  //     id: '550',
-  //     overview:
-  //         'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.',
-  //     voteAverage: 8.4,
-  //     isFavourite: false,
-  //   ),
-  //   Movie(
-  //     title: 'Fight Club',
-  //     posterPath: '/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg',
-  //     id: '550',
-  //     overview:
-  //         'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.',
-  //     voteAverage: 8.4,
-  //     isFavourite: false,
-  //   ),
-  //   Movie(
-  //     title: 'Fight Club',
-  //     posterPath: '/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg',
-  //     id: '550',
-  //     overview:
-  //         'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.',
-  //     voteAverage: 8.4,
-  //     isFavourite: false,
-  //   ),
-  // ];
+
+  getNextPage() {
+    if (totalPages >= currentPage) {
+      var nextPage = currentPage + 1;
+      print('fetching next page');
+      print(nextPage);
+      setState(() {
+        currentPage = nextPage;
+        isFooterLoading = true;
+      });
+      fetchNexPageMovies(_query, nextPage).then((data) => {
+            setState(() {
+              movies = [...movies, ...data[0]];
+              totalPages = data[1];
+              isFooterLoading = false;
+              print('movies length after fetching next page');
+              print(movies.length);
+            })
+          });
+    } else {
+      setState(() {
+        noMoreResults = true;
+      });
+      // throw 'Page size is exceeded';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +72,8 @@ class _MovieAppState extends State<MovieApp> {
             height: 10.0,
           ),
           Expanded(
-            child: MovieList(movies, isLoading),
+            child: MovieList(
+                movies, isLoading, getNextPage, isFooterLoading, noMoreResults),
           )
         ],
       ),

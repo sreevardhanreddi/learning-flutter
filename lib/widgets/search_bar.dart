@@ -6,8 +6,6 @@ class SearchBar extends StatefulWidget {
   Function sendMovieQuery;
 
   SearchBar(Function funcFromParent) {
-    print('inside search bar constructor');
-    print(funcFromParent);
     this.sendMovieQuery = funcFromParent;
   }
 
@@ -26,6 +24,11 @@ class _SearchBarState extends State<SearchBar> {
           Container(
             child: Expanded(
               child: TextField(
+                onSubmitted: (data) {
+                  if (data.length > 0) {
+                    widget.sendMovieQuery(data);
+                  }
+                },
                 onChanged: (data) {
                   setState(() {
                     _query = data;

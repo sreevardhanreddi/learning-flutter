@@ -20,7 +20,6 @@ class _MovieDetailState extends State<MovieDetail> {
   bool isFetchingCast = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       isFetchingCast = true;
@@ -29,9 +28,6 @@ class _MovieDetailState extends State<MovieDetail> {
       setState(() {
         movieCast = data;
         isFetchingCast = false;
-        print('in set state +++++++++++');
-        print(movieCast);
-        print(movieCast[0].name);
       });
     });
   }
@@ -48,43 +44,46 @@ class _MovieDetailState extends State<MovieDetail> {
         appBar: AppBar(
           title: Text(movie.title), // splice it if it's too long
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: 10.0,
-              ),
-              Overview(
-                movie: movie,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                margin: EdgeInsets.all(4.0),
-                child: Container(
-                  child: Text(
-                    movie.overview,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18.0,
+        body: ListView(
+          children: <Widget>[
+            // child:
+            Column(
+              // mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  height: 10.0,
+                ),
+                Overview(
+                  movie: movie,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  margin: EdgeInsets.all(4.0),
+                  child: Container(
+                    child: Text(
+                      movie.overview,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.all(8.0),
-                height: 200.0,
-                child: Center(
-                  child: castListWidget,
+                Container(
+                  margin: EdgeInsets.all(8.0),
+                  height: 200.0,
+                  child: Center(
+                    child: castListWidget,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-            ],
-          ),
+                SizedBox(
+                  height: 10.0,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
